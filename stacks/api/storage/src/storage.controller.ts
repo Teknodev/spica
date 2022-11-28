@@ -69,6 +69,7 @@ export class StorageController {
    * @param ifNoneMatch When present and matches objects checksum, status code will be 304.
    */
   @Get(":id/view")
+  @UseGuards(AuthGuard(), ActionGuard("storage:show", "storage/:id"))
   async view(
     @Res() res,
     @Param("id", OBJECT_ID) id: ObjectId,
@@ -93,6 +94,7 @@ export class StorageController {
    * @param id Identifier of the object
    */
   @Get(":id")
+  @UseGuards(AuthGuard(), ActionGuard("storage:show"))
   async findOne(@Param("id", OBJECT_ID) id: ObjectId) {
     const object = await this.storage.get(id);
 
@@ -100,7 +102,7 @@ export class StorageController {
       throw new NotFoundException("Could not find the object.");
     }
 
-    object.url = await this.storage.getUrl(id.toHexString());
+    object.url = this.storage.getUrl(id.toHexString());
 
     delete object.content.data;
     return object;
@@ -157,7 +159,7 @@ export class StorageController {
     object = await this.storage.update(id, object).catch(error => {
       throw new HttpException(error.message, error.status || 500);
     });
-    object.url = await this.storage.getUrl(id.toHexString());
+    object.url = this.storage.getUrl(id.toHexString());
     return object;
   }
 
@@ -213,7 +215,7 @@ export class StorageController {
     });
 
     for (const object of objects) {
-      object.url = await this.storage.getUrl(object._id.toString());
+      object.url = this.storage.getUrl(object._id.toString());
     }
     return objects;
   }

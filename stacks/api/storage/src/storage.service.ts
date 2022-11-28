@@ -107,7 +107,7 @@ export class StorageService extends BaseCollection<StorageObject>("storage") {
 
   private async putUrls(objects: StorageResponse[]) {
     for (const object of objects) {
-      object.url = await this.service.url(object._id.toString());
+      object.url = this.getUrl(object._id.toString());
     }
     return objects;
   }
@@ -178,8 +178,8 @@ export class StorageService extends BaseCollection<StorageObject>("storage") {
     return insertedObjects;
   }
 
-  async getUrl(id: string) {
-    return this.service.url(id);
+  getUrl(id: string) {
+    return `${this.storageOptions.defaultPublicUrl}/storage/${id}/view`;
   }
 }
 
