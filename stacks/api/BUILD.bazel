@@ -101,6 +101,6 @@ container_push(
     image = ":image",
     registry = "index.docker.io",
     repository = "htuna07/aws-spica-api",
-    tag = "secure-storage-endpoints",
+    tag = "retry-git-init",
     tags = ["release-with-spica"],
 )

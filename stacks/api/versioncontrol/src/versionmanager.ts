@@ -51,12 +51,35 @@ export class Git implements VersionManager {
     return map.exec(options);
   }
 
+  private async tryGitInit() {
+    let retry = 3;
+    const init = () => this.git.init();
+
+    while (retry > 0) {
+      try {
+        await init();
+        break;
+      } catch (error) {
+        console.error(error);
+
+        retry = retry - 1;
+        console.log("Retrying git init:", retry);
+
+        await new Promise((resolve, reject) => setTimeout(resolve, 2000));
+      }
+    }
+  }
+
   constructor(private cwd: string) {
     this.git = simpleGit({baseDir: this.cwd, binary: "git", maxConcurrentProcesses: 6});
-    this.git.init().then(() => {
-      this.git.addConfig("user.name", "Spica", false, "worktree");
-      this.git.addConfig("user.email", "Spica", false, "worktree");
-    });
+
+    this.tryGitInit()
+      .then(() => {
+        this.git.addConfig("safe.directory", cwd, false, "global");
+        this.git.addConfig("user.name", "Spica", false, "local");
+        this.git.addConfig("user.email", "Spica", false, "local");
+      })
+      .catch(console.error);
   }
 
   checkout({args}) {
