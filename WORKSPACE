@@ -63,7 +63,7 @@ container_pull(
 
 container_pull(
     name = "debian_image",
-    digest = "sha256:1ceec96ca567c40500a2745728f7c19c0801785c8b10187b1d66bcd538694fc2",
+    digest = "sha256:50c6072140eb89a1cd28f8b2660addbdf0dff862ea93e46c5ebafa309d809cc0",
     registry = "index.docker.io",
     repository = "library/debian",
     tag = "buster-slim",
