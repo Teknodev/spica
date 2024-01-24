@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 set -e
 
-if [ ! -f WORKSPACE ]; then
-    echo "###########################################"
-    echo "Please run this script from workspace root."
-    echo "###########################################"
-    exit 1;
-fi
+# if [ ! -f WORKSPACE ]; then
+#     echo "###########################################"
+#     echo "Please run this script from workspace root."
+#     echo "###########################################"
+#     exit 1;
+# fi
 
 if [ $# -eq 0 ]; then
   echo "Please provide a version"
