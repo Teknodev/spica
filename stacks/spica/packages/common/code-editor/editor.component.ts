@@ -120,7 +120,7 @@ export class EditorComponent implements ControlValueAccessor {
           (<any>window).require.config({paths: {vs: "./assets/monaco/min/vs"}});
           (<any>window).require(["vs/editor/editor.main"], () => {
             this.initMonaco(this.options);
-            resolve();
+            resolve("");
           });
         };
 
