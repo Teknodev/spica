@@ -375,10 +375,7 @@ Example: http(s)://doomed-d45f1.spica.io/api`
       );
     }
 
-    if (
-      args["storage-strategy"] == "awss3" &&
-      (!args["awss3-bucket-name"])
-    ) {
+    if (args["storage-strategy"] == "awss3" && !args["awss3-bucket-name"]) {
       throw new TypeError(
         "--awss3-bucket-name must be present when --storage-strategy is set to 'awss3'."
       );
