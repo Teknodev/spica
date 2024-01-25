@@ -21,8 +21,8 @@ node_repositories(
 
 yarn_install(
     name = "npm",
-    package_json = "//stacks/api:package.json",
-    yarn_lock = "//stacks/api:yarn.lock",
+    package_json = "//:package.json",
+    yarn_lock = "//:yarn.lock",
 )
 
 yarn_install(

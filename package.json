@@ -11,6 +11,15 @@
     "type": "git",
     "url": "https://github.com/spica-engine/spica.git"
   },
+  "workspaces": {
+    "packages": [
+      "stacks/api",
+      "stacks/migrate"
+    ],
+    "nohoist": [
+      "*"
+    ]
+  },
   "scripts": {
     "bazel:format": "find . -type f \\( -name \"*.bzl\" -or -name WORKSPACE -or -name BUILD -or -name BUILD.bazel \\) ! -path \"*/node_modules/*\" | xargs buildifier -v --warnings=attr-cfg,attr-license,attr-non-empty,attr-output-default,attr-single-file,constant-glob,ctx-args,depset-iteration,depset-union,dict-concatenation,duplicated-name,filetype,git-repository,http-archive,integer-division,load,load-on-top,native-build,native-package,output-group,package-name,package-on-top,positional-args,redefined-variable,repository-name,same-origin-load,string-iteration,unused-variable",
     "code:format": "yarn prettier --write 'packages/**/*.{css,scss,ts,js,html}' 'stacks/**/*.{css,scss,ts,js,html}' '!stacks/api/function/packages/database/src/mongo.ts'",
@@ -22,7 +31,6 @@
     "run-cli": "bazel run //stacks/cli:bin"
   },
   "dependencies": {
-    "patch-package": "^6.4.7",
     "@google-cloud/storage": "^5.0.1",
     "@graphql-tools/merge": "^8.2.1",
     "@graphql-tools/schema": "^8.3.1",
