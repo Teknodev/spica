@@ -3,10 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "postinstall": "ngcc && patch-package"
+    "postinstall": "ngcc"
   },
   "dependencies": {
-    "patch-package": "^6.4.7",
     "@angular/animations": "^11.0.2",
     "@angular/cdk": "^11.0.0",
     "@angular/common": "^11.0.2",
