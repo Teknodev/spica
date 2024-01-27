@@ -287,7 +287,7 @@ describe("BucketController", () => {
         const response = await req.post("/bucket", bucket);
         expect([response.statusCode, response.statusText]).toEqual([400, "Bad Request"]);
         expect([response.body.message, response.body.error]).toEqual([
-          ".title should NOT have fewer than 4 characters",
+          ".title should NOT have fewer than 4 items",
           "validation failed"
         ]);
       });
@@ -297,7 +297,7 @@ describe("BucketController", () => {
         const response = await req.post("/bucket", bucket);
         expect([response.statusCode, response.statusText]).toEqual([400, "Bad Request"]);
         expect([response.body.message, response.body.error]).toEqual([
-          ".title should NOT have more than 100 characters",
+          ".title should NOT have more than 100 items",
           "validation failed"
         ]);
       });
@@ -309,7 +309,7 @@ describe("BucketController", () => {
         const response = await req.post("/bucket", bucket);
         expect([response.statusCode, response.statusText]).toEqual([400, "Bad Request"]);
         expect([response.body.message, response.body.error]).toEqual([
-          ".description should NOT have fewer than 5 characters",
+          ".description should NOT have fewer than 5 items",
           "validation failed"
         ]);
       });
@@ -319,7 +319,7 @@ describe("BucketController", () => {
         const response = await req.post("/bucket", bucket);
         expect([response.statusCode, response.statusText]).toEqual([400, "Bad Request"]);
         expect([response.body.message, response.body.error]).toEqual([
-          ".description should NOT have more than 250 characters",
+          ".description should NOT have more than 250 items",
           "validation failed"
         ]);
       });
