@@ -129,7 +129,8 @@ const args = yargs
     },
     "passport-identity-password-history-uniqueness-count": {
       number: true,
-      description: "How many of last passwords will be compared with the new password in terms of uniqueness",
+      description:
+        "How many of last passwords will be compared with the new password in terms of uniqueness",
       default: 4
     },
     "passport-identity-token-expiration-seconds-limit": {
@@ -483,8 +484,7 @@ const modules = [
     samlCertificateTTL: args["passport-saml-certificate-ttl"],
     blockingOptions: {
       failedAttemptLimit: args["passport-identity-failed-login-attempt-limit"],
-      blockDurationMinutes:
-        args["passport-identity-block-duration-after-failed-login-attempts"]
+      blockDurationMinutes: args["passport-identity-block-duration-after-failed-login-attempts"]
     },
     passwordHistoryUniquenessCount: args["passport-identity-password-history-uniqueness-count"]
   }),
@@ -572,10 +572,21 @@ NestFactory.create(RootModule, {
     app.enableShutdownHooks();
 
     if (args["access-logs"]) {
-      morgan.token("prefix", () => "access-log:");
+      morgan.token("accessor", (req, res) => {
+        if (!req.user) {
+          return req.headers.authorization;
+        }
+
+        const fields = ["_id", "identifier", "name"];
+        Object.keys(req.user).forEach(
+          userField => !fields.includes(userField) && delete req.user[userField]
+        );
+
+        return JSON.stringify(req.user);
+      });
       app.use(
         morgan(
-          ':prefix :remote-addr - :req[authorization] ":method :url HTTP/:http-version" :status [:date[iso]] - :response-time ms',
+          ':remote-addr - :accessor ":method :url HTTP/:http-version" :status [:date[iso]]',
           {
             skip: (req, res) => {
               const urlRegex = new RegExp(args["access-logs-url-filter"]);
