@@ -18,13 +18,13 @@ import { RefreshTokenService } from "./refreshtoken.service";
 import { RefreshToken, PaginationResponse } from "./interface";
 import { PipelineBuilder } from "@spica-server/database/pipeline";
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { BLACKLISTEDTOKEN_OPTIONS, RefreshTokenOptions } from "./options";
+import { REFRESHTOKEN_OPTIONS, RefreshTokenOptions } from "./options";
 
 @Controller("passport/refreshtoken")
 export class RefreshTokenController {
   constructor(
     private refreshTokenService: RefreshTokenService,
-    @Inject(BLACKLISTEDTOKEN_OPTIONS) private options: RefreshTokenOptions,
+    @Inject(REFRESHTOKEN_OPTIONS) private options: RefreshTokenOptions,
     ) { }
 
   @Get()

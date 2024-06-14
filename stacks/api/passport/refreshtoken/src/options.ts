@@ -1,4 +1,4 @@
-export const BLACKLISTEDTOKEN_OPTIONS = Symbol.for("BLACKLISTEDTOKEN_OPTIONS");
+export const REFRESHTOKEN_OPTIONS = Symbol.for("REFRESHTOKEN_OPTIONS");
 
 export interface RefreshTokenOptions {
   refreshTokenExpiresIn: number;

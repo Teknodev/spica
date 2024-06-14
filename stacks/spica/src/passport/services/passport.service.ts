@@ -38,20 +38,11 @@ export class PassportService {
 
   logout(): void {
     localStorage.removeItem("access_token");
-    localStorage.removeItem("next_token_refresh_date");
   }
 
   onTokenRecieved(response) {
     this.token = `${response.scheme} ${response.token}`;
     this._statements = undefined;
-  }
-
-  getTokenExpMin() {
-    const iat = this.decodedToken.iat * 1000;
-    const exp = this.decodedToken.exp * 1000;
-
-    const differenceInMilliseconds = Math.abs(exp - iat);
-    return differenceInMilliseconds / (1000 * 60);
   }
 
   answerAuthFactor(factor, answer) {

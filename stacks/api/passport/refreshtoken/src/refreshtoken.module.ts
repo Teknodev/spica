@@ -1,9 +1,9 @@
-import {DynamicModule, Global, Inject, Module, Optional} from "@nestjs/common";
-import {SchemaModule, Validator} from "@spica-server/core/schema";
+import {DynamicModule, Module} from "@nestjs/common";
+import {SchemaModule} from "@spica-server/core/schema";
 import {RefreshTokenController} from "./refreshtoken.controller";
 import {RefreshTokenService} from "./refreshtoken.service";
 import RefreshTokenSchema = require("./schemas/refreshtoken.json");
-import {BLACKLISTEDTOKEN_OPTIONS, RefreshTokenOptions} from "./options";
+import {REFRESHTOKEN_OPTIONS, RefreshTokenOptions} from "./options";
 @Module({})
 export class RefreshTokenModule {
   static forRoot(options: RefreshTokenOptions): DynamicModule {
@@ -19,7 +19,7 @@ export class RefreshTokenModule {
       providers: [
         RefreshTokenService,
         {
-          provide: BLACKLISTEDTOKEN_OPTIONS,
+          provide: REFRESHTOKEN_OPTIONS,
           useValue: options
         },
       ]

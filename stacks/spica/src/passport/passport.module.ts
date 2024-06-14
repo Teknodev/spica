@@ -23,7 +23,6 @@ import {MatTableModule} from "@angular/material/table";
 import {MatTabsModule} from "@angular/material/tabs";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatTooltipModule} from "@angular/material/tooltip";
-import {OwlDateTimeModule, OwlNativeDateTimeModule} from "@danielmoncada/angular-datetime-picker";
 import {CommonModule as SpicaCommon, InputModule} from "@spica-client/common";
 import {LAYOUT_ACTIONS, ROUTE_FILTERS} from "@spica-client/core";
 import {BUILDLINK_FACTORY} from "@spica-client/core/factories/factory";
@@ -105,8 +104,6 @@ import {ApiKeyService} from "./services/apikey.service";
     MatDialogModule,
     MatSelectModule,
     MatTooltipModule,
-    OwlDateTimeModule,
-    OwlNativeDateTimeModule,
     MatAwareDialogModule,
     MatToolbarModule,
     MatGridListModule,
