@@ -41,27 +41,9 @@ export class PassportService {
     localStorage.removeItem("next_token_refresh_date");
   }
 
-  unidentify(){
-    return this.http.get<any>("api:/passport/unidentify", {withCredentials: true});
-  }
-
   onTokenRecieved(response) {
     this.token = `${response.scheme} ${response.token}`;
     this._statements = undefined;
-    if(!this.getNextTokenRefreshDate()){
-      this.setNextTokenRefreshDate();
-    }
-  }
-
-  getNextTokenRefreshDate() {
-    return localStorage.getItem("next_token_refresh_date")
-  }
-
-  setNextTokenRefreshDate() {
-    const now = new Date();
-    const minutes = this.getTokenExpMin() - 1;
-    const date = now.setMinutes(now.getMinutes() + minutes)
-    localStorage.setItem("next_token_refresh_date", new Date(date).toString())
   }
 
   getTokenExpMin() {
@@ -95,8 +77,8 @@ export class PassportService {
       );
   }
 
-  refreshToken() {
-    return this.http.get<any>("api:/passport/refresh-token", {withCredentials: true});
+  getAccessToken() {
+    return this.http.get<any>("api:/passport/access-token", {withCredentials: true});
   }
 
   getStrategies() {

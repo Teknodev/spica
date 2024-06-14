@@ -30,7 +30,6 @@ export class IdentityBadgeComponent {
   }
 
   unidentify() {
-    this.passportService.unidentify().subscribe();
     this.passportService.logout();
     this.router.navigate(["passport/identify"]);
   }

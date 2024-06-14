@@ -14,21 +14,21 @@ import { BOOLEAN, DEFAULT, JSONP, NUMBER } from "@spica-server/core";
 import { Schema } from "@spica-server/core/schema";
 import { ObjectId, OBJECT_ID } from "@spica-server/database";
 import { ActionGuard, AuthGuard, ResourceFilter } from "@spica-server/passport/guard";
-import { BlacklistedTokenService } from "./blacklistedtoken.service";
-import { BlacklistedToken, PaginationResponse } from "./interface";
+import { RefreshTokenService } from "./refreshtoken.service";
+import { RefreshToken, PaginationResponse } from "./interface";
 import { PipelineBuilder } from "@spica-server/database/pipeline";
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { BLACKLISTEDTOKEN_OPTIONS, BlacklistedTokenOptions } from "./options";
+import { BLACKLISTEDTOKEN_OPTIONS, RefreshTokenOptions } from "./options";
 
-@Controller("passport/blacklistedtoken")
-export class BlacklistedTokenController {
+@Controller("passport/refreshtoken")
+export class RefreshTokenController {
   constructor(
-    private blacklistedTokenService: BlacklistedTokenService,
-    @Inject(BLACKLISTEDTOKEN_OPTIONS) private options: BlacklistedTokenOptions,
+    private refreshTokenService: RefreshTokenService,
+    @Inject(BLACKLISTEDTOKEN_OPTIONS) private options: RefreshTokenOptions,
     ) { }
 
   @Get()
-  @UseGuards(AuthGuard(), ActionGuard("passport:blacklistedtoken:index"))
+  @UseGuards(AuthGuard(), ActionGuard("passport:refreshtoken:index"))
   async find(
     @Query("limit", DEFAULT(0), NUMBER) limit: number,
     @Query("skip", DEFAULT(0), NUMBER) skip: number,
@@ -50,12 +50,12 @@ export class BlacklistedTokenController {
     const pipeline = (await pipelineBuilder.paginate(
       paginate,
       seekingPipeline,
-      this.blacklistedTokenService.estimatedDocumentCount()
+      this.refreshTokenService.estimatedDocumentCount()
     )).result();
 
     if (paginate) {
-      return this.blacklistedTokenService
-        .aggregate<PaginationResponse<BlacklistedToken>>(pipeline)
+      return this.refreshTokenService
+        .aggregate<PaginationResponse<RefreshToken>>(pipeline)
         .next()
         .then(r => {
           if (!r.data.length) {
@@ -66,13 +66,13 @@ export class BlacklistedTokenController {
     }
 
 
-    return this.blacklistedTokenService.aggregate<BlacklistedToken[]>([...pipeline, ...seekingPipeline]).toArray();
+    return this.refreshTokenService.aggregate<RefreshToken[]>([...pipeline, ...seekingPipeline]).toArray();
   }
 
   @Get(":id")
-  @UseGuards(AuthGuard(), ActionGuard("passport:blacklistedtoken:show"))
+  @UseGuards(AuthGuard(), ActionGuard("passport:refreshtoken:show"))
   findOne(@Param("id", OBJECT_ID) id: ObjectId) {
-    return this.blacklistedTokenService.findOne({_id: id}).then(r => {
+    return this.refreshTokenService.findOne({_id: id}).then(r => {
       if (!r) {
         throw new NotFoundException();
       }
@@ -80,17 +80,10 @@ export class BlacklistedTokenController {
     });
   }
 
-  @Post()
-  @UseGuards(AuthGuard(), ActionGuard("passport:blacklistedtoken:create"))
-  insertOne(@Body(Schema.validate("http://spica.internal/passport/blacklistedtoken")) jwt: BlacklistedToken) {
-    jwt.expires_in = jwt.expires_in ? new Date(jwt.expires_in) : new Date();
-    return this.blacklistedTokenService.insertOne(jwt);
-  }
-
   @Delete(":id")
-  @UseGuards(AuthGuard(), ActionGuard("passport:blacklistedtoken:delete"))
+  @UseGuards(AuthGuard(), ActionGuard("passport:refreshtoken:delete"))
   deleteOne(@Param("id", OBJECT_ID) id: ObjectId) {
-    return this.blacklistedTokenService.deleteOne({_id: id}).then(r => {
+    return this.refreshTokenService.deleteOne({_id: id}).then(r => {
       if (!r) {
         throw new NotFoundException();
       }
@@ -101,6 +94,6 @@ export class BlacklistedTokenController {
   clearExpiredTokes() {
     const now = new Date();
     const expiresIn = new Date(now.getTime() - this.options.refreshTokenExpiresIn * 1000);
-    this.blacklistedTokenService.deleteMany({expires_in: { $lt: expiresIn }})
+    this.refreshTokenService.deleteMany({expires_in: { $lt: expiresIn }})
   }
 }

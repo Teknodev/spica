@@ -1,29 +1,42 @@
 import {Component, OnInit, TemplateRef, ViewChild} from "@angular/core";
 import {MatPaginator} from "@angular/material/paginator";
-import {BlacklistedToken} from "src/passport/interfaces/blacklistedtoken";
+import {RefreshToken, FilterSchema, RefreshTokenSchema} from "../../interfaces/refreshtoken";
 import {Observable, of, Subject, merge} from "rxjs";
 import {switchMap, map} from "rxjs/operators";
-import {BlacklistedTokenService} from "src/passport/services/blacklistedtoken.service";
-import { FilterSchema } from "@spica-client/passport/interfaces/identity";
+import {RefreshTokenService} from "src/passport/services/refreshtoken.service";
 
 @Component({
-  selector: "passport-blacklistedtoken-index",
-  templateUrl: "./blacklistedtoken-index.component.html",
-  styleUrls: ["./blacklistedtoken-index.component.scss"]
+  selector: "passport-refreshtoken-index",
+  templateUrl: "./refreshtoken-index.component.html",
+  styleUrls: ["./refreshtoken-index.component.scss"]
 })
-export class BlacklistedTokenIndexComponent implements OnInit {
+export class RefreshTokenIndexComponent implements OnInit {
   @ViewChild("toolbar", {static: true}) toolbar: TemplateRef<any>;
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
-  properties = ["_id", "token", "expires_in", "actions"];
-  displayedProperties = JSON.parse(localStorage.getItem("Blacklistedtoken-displayedProperties")) || [
+  properties = ["_id", "token", "expires_in", "identity", "actions"];
+  displayedProperties = JSON.parse(localStorage.getItem("Refreshtoken-displayedProperties")) || [
     "_id",
     "token",
     "expires_in",
+    "identity",
     "actions"
   ];
-  blacklistedToken$: Observable<BlacklistedToken[]>;
+  refreshToken$: Observable<RefreshToken[]>;
   refresh$: Subject<void> = new Subject<void>();
+
+  schema: RefreshTokenSchema = {
+    properties: {
+      token: {
+        type: "string",
+        title: "Token"
+      },
+      identity: {
+        type: "string",
+        title: "Identity"
+      },
+    }
+  };
 
   sort: {[key: string]: number} = {_id: -1};
 
@@ -31,12 +44,13 @@ export class BlacklistedTokenIndexComponent implements OnInit {
   
   filter: {[key: string]: any} = {};
 
-  constructor(private blacklistedTokenService: BlacklistedTokenService) {}
+  constructor(private refreshTokenService: RefreshTokenService) {}
 
   ngOnInit() {
-    this.blacklistedToken$ = merge(this.paginator.page, of(null), this.refresh$).pipe(
+    this.filterSchema = {properties: {...this.schema.properties}};
+    this.refreshToken$ = merge(this.paginator.page, of(null), this.refresh$).pipe(
       switchMap(() =>
-        this.blacklistedTokenService.getAll(
+        this.refreshTokenService.getAll(
           this.paginator.pageSize || 10,
           this.paginator.pageSize * this.paginator.pageIndex,
           this.sort,
@@ -51,8 +65,8 @@ export class BlacklistedTokenIndexComponent implements OnInit {
     );
   }
 
-  deleteBlacklistedToken(id: string) {
-    this.blacklistedTokenService
+  deleteRefreshToken(id: string) {
+    this.refreshTokenService
       .delete(id)
       .toPromise()
       .then(() => this.refresh$.next());
@@ -69,27 +83,38 @@ export class BlacklistedTokenIndexComponent implements OnInit {
       (a, b) => this.properties.indexOf(a) - this.properties.indexOf(b)
     );
 
-    localStorage.setItem("Blacklistedtoken-displayedProperties", JSON.stringify(this.displayedProperties));
+    localStorage.setItem("Refreshtoken-displayedProperties", JSON.stringify(this.displayedProperties));
   }
 
   toggleDisplayAll(display: boolean) {
     if (display) {
       this.displayedProperties = JSON.parse(JSON.stringify(this.properties));
     } else {
-      this.displayedProperties = ["_id", "token", "expires_in", "actions"];
+      this.displayedProperties = ["_id", "token", "expires_in", "identity", "actions"];
     }
 
-    localStorage.setItem("Blacklistedtoken-displayedProperties", JSON.stringify(this.displayedProperties));
+    localStorage.setItem("Refreshtoken-displayedProperties", JSON.stringify(this.displayedProperties));
   }
 
   onSortChange(sort) {
-    console.log("sort: ", sort)
     if (!sort.direction) {
       this.sort = {_id: -1};
     } else {
       this.sort = {
         [sort.active]: sort.direction === "asc" ? 1 : -1
       };
+    }
+
+    this.refresh$.next();
+  }
+
+  onFilterChange(filter: {[key: string]: string}) {
+    if (!Object.keys(filter).length) {
+      this.filter = {};
+    }
+
+    for (const [property, value] of Object.entries(filter)) {
+      this.filter[property] = value;
     }
 
     this.refresh$.next();

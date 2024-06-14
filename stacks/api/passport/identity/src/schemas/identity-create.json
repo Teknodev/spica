@@ -31,28 +31,6 @@
 				"type":"string",
 				"format": "date-time"
 			}
-		},
-		"refreshTokens":{
-			"type":"array",
-			"items": {
-				"type":"object",
-				"properties": {
-					"token": {
-						"type":"string"
-					},
-					"userAgent": {
-						"type":"string"
-					},
-					"createdAt": {
-						"type":"string",
-						"format": "date-time"
-					},
-					"expiresIn": {
-						"type":"string",
-						"format": "date-time"
-					}
-				} 
-			}
 		}
 	},
 	"additionalProperties": false

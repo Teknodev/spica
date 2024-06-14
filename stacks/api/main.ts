@@ -179,7 +179,7 @@ const args = yargs
         "StatusFullAccess",
         "AssetFullAccess",
         "VersionControlFullAccess",
-        "BlacklistedTokenFullAccess"
+        "RefreshTokenFullAccess"
       ]
     },
     "passport-identity-limit": {

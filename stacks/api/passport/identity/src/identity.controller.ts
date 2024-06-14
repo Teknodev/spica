@@ -298,7 +298,6 @@ export class IdentityController {
     identity.lastLogin = undefined;
     identity.failedAttempts = [];
     identity.lastPasswords = [];
-    identity.refreshTokens = [];
 
     return this.identityService
       .insertOne(identity)

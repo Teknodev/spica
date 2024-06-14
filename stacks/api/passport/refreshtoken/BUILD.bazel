@@ -3,8 +3,8 @@ load("//tools/ts_project:index.bzl", "ts_project")
 package(default_visibility = ["//visibility:public"])
 
 ts_project(
-    name = "blacklistedtoken",
-    package_name = "@spica-server/passport/blacklistedtoken",
+    name = "refreshtoken",
+    package_name = "@spica-server/passport/refreshtoken",
     srcs = glob([
         "index.ts",
         "src/*.ts",

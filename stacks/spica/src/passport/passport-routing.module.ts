@@ -14,8 +14,7 @@ import {StrategiesComponent} from "./pages/strategies/strategies.component";
 import {StrategiesAddComponent} from "./pages/strategies-add/strategies-add.component";
 import {ApiKeyIndexComponent} from "./pages/apikey-index/apikey-index.component";
 import {ApiKeyAddComponent} from "./pages/apikey-add/apikey-add.component";
-import {BlacklistedTokenIndexComponent} from "./pages/blacklistedtoken-index/blacklistedtoken-index.component";
-import {BlacklistedTokenAddComponent} from "./pages/blacklistedtoken-add/blacklistedtoken-add.component";
+import {RefreshTokenIndexComponent} from "./pages/refreshtoken-index/refreshtoken-index.component";
 
 const routes: Routes = [
   {path: "passport/identify", component: IdentifyComponent, data: {layout: false}},
@@ -95,16 +94,11 @@ const routes: Routes = [
         ]
       },
       {
-        path: "blacklistedtoken",
+        path: "refreshtoken",
         canActivateChild: [PolicyGuard],
-        data: {service: "passport:blacklistedtoken"},
+        data: {service: "passport:refreshtoken"},
         children: [
-          {path: "", component: BlacklistedTokenIndexComponent, data: {action: "index"}},
-          {
-            path: "add",
-            component: BlacklistedTokenAddComponent,
-            data: {action: "create"}
-          },
+          {path: "", component: RefreshTokenIndexComponent, data: {action: "index"}},
         ]
       }
     ]
@@ -145,12 +139,12 @@ const route: Route[] = [
     data: {action: "passport:apikey:index"}
   },
   {
-    id: "passport.blacklistedtoken",
+    id: "passport.refreshtoken",
     category: RouteCategory.System,
-    display: "Blacklisted Token",
-    icon: "block",
-    path: "/passport/blacklistedtoken",
-    data: {action: "passport:blacklistedtoken:index"}
+    display: "Refresh Tokens",
+    icon: "verified_user",
+    path: "/passport/refreshtoken",
+    data: {action: "passport:refreshtoken:index"}
   },
   {
     id: "passport.settings",

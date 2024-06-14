@@ -41,7 +41,7 @@ import AssetReadOnlyAccess from "./asset.readonly";
 
 import VersionControlFullAccess from "./version.fullaccess";
 
-import BlacklistedTokenFullAccess from "./passport/blacklistedtoken.fullaccess";
+import RefreshTokenFullAccess from "./passport/refreshtoken.fullaccess";
 
 export default [
   ApiKeyFullAccess,
@@ -87,5 +87,5 @@ export default [
 
   VersionControlFullAccess,
 
-  BlacklistedTokenFullAccess
+  RefreshTokenFullAccess
 ];

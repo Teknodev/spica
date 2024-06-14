@@ -5,7 +5,7 @@ import {Validator, Default} from "@spica-server/core/schema";
 import {hash, compare} from "./hash";
 import {JwtService} from "@nestjs/jwt";
 import {IDENTITY_OPTIONS, IdentityOptions} from "./options";
-import {BlacklistedTokenService} from "@spica-server/passport/blacklistedtoken";
+import {RefreshTokenService} from "@spica-server/passport/refreshtoken";
 
 @Injectable()
 export class IdentityService extends BaseCollection<Identity>("identity") {
@@ -13,7 +13,7 @@ export class IdentityService extends BaseCollection<Identity>("identity") {
     database: DatabaseService,
     private validator: Validator,
     private jwt: JwtService,
-    private blacklistedtoken: BlacklistedTokenService,
+    private refreshtoken: RefreshTokenService,
 
     @Inject(IDENTITY_OPTIONS) private identityOptions: IdentityOptions
   ) {
@@ -30,7 +30,7 @@ export class IdentityService extends BaseCollection<Identity>("identity") {
   sign(identity: Identity, requestedExpires?: number) {
     const expiresIn = this.getTokenExpiresIn(requestedExpires, "access");
     const token = this.jwt.sign(
-      {...identity, password: undefined, refreshTokens: undefined, lastPasswords: []},
+      {...identity, password: undefined, lastPasswords: []},
       {
         header: {
           identifier: identity.identifier,
@@ -61,55 +61,41 @@ export class IdentityService extends BaseCollection<Identity>("identity") {
     return variants[variant || "access"]();
   }
 
-  async generateRefreshToken(identity: Identity, requestedExpires?: number, userAgent?: string){
+  async generateRefreshToken(identity: Identity, requestedExpires?: number){
     const {identifier} = identity;
     const expiresIn = this.getTokenExpiresIn(requestedExpires, "refresh");
     const token = this.jwt.sign({identifier}, {expiresIn})
-  
-    const {refreshTokens} = await this.findOne({identifier});
-  
+
     const tokenSchema = {
       token,
-      userAgent,
-      createdAt: new Date(),
-      expiresIn: new Date(Date.now() + (expiresIn * 1000)),
+      identity: String(identity._id),
+      expires_in: new Date(Date.now() + (expiresIn * 1000)),
     }
     
-    refreshTokens.push(tokenSchema)
-    
-    await this.findOneAndUpdate({identifier},{$set: {refreshTokens}});
+    this.refreshtoken.insertOne(tokenSchema)
+  
     return tokenSchema;
   }
 
   async verifyRefreshToken(accessToken: string, refreshToken:string){
     const decodedRefreshToken = await this.verify(refreshToken).catch(() => {});
     if(!decodedRefreshToken){
-      return {status: false};
+      return;
     }
     
-    const blacklistedTokened = await this.blacklistedtoken.findOne({token: refreshToken});
-    if(blacklistedTokened){
-      return {status: false};
+    const refreshTokenData = await this.refreshtoken.findOne({token: refreshToken});
+    if(!refreshTokenData){
+      return;
     }
 
     const {identifier} = await this.verify(accessToken.split(" ")[1]);
     const identity = await this.findOne({identifier});
-    const candidateRefreshToken = identity.refreshTokens.find(el => el.token == refreshToken)?.token;
 
-    if(candidateRefreshToken && refreshToken == candidateRefreshToken){
-      return {status: true, identity, decodedRefreshToken};
+    if(refreshTokenData.identity !== String(identity._id)){
+      return;
     }
 
-    return {status: false};
-  }
-
-  async deleteRefreshToken(token: string, identifier: string){
-    const identity = await this.findOne({identifier});
-    const refreshTokens = identity.refreshTokens.filter(t => t.token != token);
-    return this.findOneAndUpdate(
-      {identifier},
-      {$set: {refreshTokens}}
-    );
+    return identity;
   }
 
   getCookieOptions(){
@@ -138,7 +124,6 @@ export class IdentityService extends BaseCollection<Identity>("identity") {
     }
 
     identity.failedAttempts = identity.failedAttempts || [];
-    identity.refreshTokens = identity.refreshTokens || [];
 
     this.checkIdentityIsBlocked(identity);
 

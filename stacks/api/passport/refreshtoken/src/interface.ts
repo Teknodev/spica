@@ -1,7 +1,8 @@
 import {ObjectId} from "@spica-server/database";
 
-export interface BlacklistedToken {
+export interface RefreshToken {
   _id?: ObjectId;
+  identity: string;
   token: string;
   expires_in: Date;
 }

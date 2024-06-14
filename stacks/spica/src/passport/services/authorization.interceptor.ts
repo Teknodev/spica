@@ -36,24 +36,20 @@ export class AuthorizationInterceptor implements HttpInterceptor {
     );
   }
   refreshToken(requestURL: string){
-    if(requestURL != `${environment.api}/passport/refresh-token`){
-      const lastReqDate = this.passport.getNextTokenRefreshDate();
-      if(new Date(lastReqDate) < new Date()){
-        this.passport.setNextTokenRefreshDate();
-        this.passport.refreshToken()
-        .pipe(
-          take(1),
-        )
-        .subscribe(
-          r => {
-            this.passport.onTokenRecieved(r);
-          },
-          r => {
-            this.passport.logout();
-            this.router.navigate(["passport/identify"]);
-          }
-        );
-      }
+    if(requestURL != `${environment.api}/passport/access-token`){
+      this.passport.getAccessToken()
+      .pipe(
+        take(1),
+      )
+      .subscribe(
+        r => {
+          this.passport.onTokenRecieved(r);
+        },
+        r => {
+          this.passport.logout();
+          this.router.navigate(["passport/identify"]);
+        }
+      );
     }
   }
 }

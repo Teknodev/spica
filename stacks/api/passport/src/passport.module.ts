@@ -1,7 +1,7 @@
 import {DynamicModule, Global, Module} from "@nestjs/common";
 import {PassportModule as CorePassportModule} from "@nestjs/passport";
 import {ApiKeyModule} from "@spica-server/passport/apikey";
-import {BlacklistedTokenModule} from "@spica-server/passport/blacklistedtoken";
+import {RefreshTokenModule} from "@spica-server/passport/refreshtoken";
 import {IdentityModule} from "@spica-server/passport/identity";
 import {PolicyModule} from "@spica-server/passport/policy";
 import {PreferenceService} from "@spica-server/preference/services";
@@ -72,7 +72,7 @@ export class PassportModule {
         }),
         PolicyModule.forRoot(),
         ApiKeyModule.forRoot(),
-        BlacklistedTokenModule.forRoot({
+        RefreshTokenModule.forRoot({
           refreshTokenExpiresIn: options.refreshTokenExpiresIn,
         }),
         AuthFactorModule
