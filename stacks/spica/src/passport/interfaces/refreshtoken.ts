@@ -3,14 +3,16 @@ import {InputSchema} from "@spica-client/common";
 export interface RefreshToken {
   _id?: string;
   token: string;
-  expires_in: Date;
+  created_at: Date;
+  expired_at: Date;
   identity: string;
 }
 
 export function emptyRefreshToken(): RefreshToken {
   return {
     token: undefined,
-    expires_in: new Date(),
+    created_at: new Date(),
+    expired_at: new Date(),
     identity: undefined
   };
 }

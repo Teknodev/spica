@@ -1,17 +1,14 @@
 import {
-  Body,
   Controller,
   Delete,
   Get,
   Inject,
   NotFoundException,
   Param,
-  Post,
   Query,
   UseGuards,
 } from "@nestjs/common";
 import { BOOLEAN, DEFAULT, JSONP, NUMBER } from "@spica-server/core";
-import { Schema } from "@spica-server/core/schema";
 import { ObjectId, OBJECT_ID } from "@spica-server/database";
 import { ActionGuard, AuthGuard, ResourceFilter } from "@spica-server/passport/guard";
 import { RefreshTokenService } from "./refreshtoken.service";
@@ -92,8 +89,6 @@ export class RefreshTokenController {
 
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   clearExpiredTokes() {
-    const now = new Date();
-    const expiresIn = new Date(now.getTime() - this.options.refreshTokenExpiresIn * 1000);
-    this.refreshTokenService.deleteMany({expires_in: { $lt: expiresIn }})
+    this.refreshTokenService.deleteMany({expired_at: { $lt: new Date() }})
   }
 }

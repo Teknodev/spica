@@ -220,17 +220,18 @@ export class PassportController {
       return;
     }
 
-    try {
-      const { tokenSchema, refreshTokenSchema, factorRes } = await this.signIdentity(identity, expires)
-      if(factorRes){
-        return res.status(200).json(factorRes);
-      }
-      this.setRefreshTokenToCookie(res, refreshTokenSchema.token)
-      return res.status(200).json(tokenSchema);
-    } catch (e) {
-      catchError(e)
+    const identifyResult = await this.signIdentity(identity, expires).catch(catchError);
+    if(!identifyResult){
       return;
     }
+
+    const {refreshTokenSchema, factorRes, tokenSchema} = identifyResult;
+    if(factorRes){
+      return res.status(200).json(factorRes)
+    }
+
+    this.setRefreshTokenToCookie(res, refreshTokenSchema.token)
+    return res.status(200).json(tokenSchema);
   }
 
   setRefreshTokenToCookie(res: any, token: string){

@@ -1,18 +1,16 @@
 import {DynamicModule, Module} from "@nestjs/common";
-import {SchemaModule} from "@spica-server/core/schema";
 import {RefreshTokenController} from "./refreshtoken.controller";
 import {RefreshTokenService} from "./refreshtoken.service";
-import RefreshTokenSchema = require("./schemas/refreshtoken.json");
 import {REFRESHTOKEN_OPTIONS, RefreshTokenOptions} from "./options";
+import {ScheduleModule} from '@nestjs/schedule';
+
 @Module({})
 export class RefreshTokenModule {
   static forRoot(options: RefreshTokenOptions): DynamicModule {
     return {
       module: RefreshTokenModule,
       imports: [
-        SchemaModule.forChild({
-          schemas: [RefreshTokenSchema]
-        })
+        ScheduleModule.forRoot(),
       ],
       exports: [RefreshTokenService],
       controllers: [RefreshTokenController],

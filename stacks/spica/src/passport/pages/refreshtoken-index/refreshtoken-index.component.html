@@ -86,8 +86,7 @@
         </th>
         <td mat-cell *matCellDef="let refreshToken">{{ refreshToken.token }}</td>
       </ng-container>
-
-      <ng-container matColumnDef="expires_in">
+      <ng-container matColumnDef="created_at">
         <th
           mat-header-cell
           mat-resize-header
@@ -95,9 +94,21 @@
           persist-header-width="Refreshtoken"
           *matHeaderCellDef
         >
-          Expires In
+          Created At
         </th>
-        <td mat-cell *matCellDef="let refreshToken">{{ refreshToken.expires_in }}</td>
+        <td mat-cell *matCellDef="let refreshToken">{{ refreshToken.created_at }}</td>
+      </ng-container>
+      <ng-container matColumnDef="expired_at">
+        <th
+          mat-header-cell
+          mat-resize-header
+          mat-sort-header
+          persist-header-width="Refreshtoken"
+          *matHeaderCellDef
+        >
+          Expired At
+        </th>
+        <td mat-cell *matCellDef="let refreshToken">{{ refreshToken.expired_at }}</td>
       </ng-container>
       <ng-container matColumnDef="identity">
         <th

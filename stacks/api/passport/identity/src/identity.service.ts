@@ -47,7 +47,7 @@ export class IdentityService extends BaseCollection<Identity>("identity") {
     };
   }
 
-  getTokenExpiresIn(requestedExpires?: number, variant?: "access" | "refresh"){
+  getTokenExpiresIn(requestedExpires?: number, variant: "access" | "refresh" = "access"){
     const variants = {
       access: () => {
         if (requestedExpires) {
@@ -58,7 +58,7 @@ export class IdentityService extends BaseCollection<Identity>("identity") {
       refresh: () => this.identityOptions.refreshTokenExpiresIn
     }
 
-    return variants[variant || "access"]();
+    return variants[variant]();
   }
 
   async generateRefreshToken(identity: Identity, requestedExpires?: number){
@@ -69,16 +69,17 @@ export class IdentityService extends BaseCollection<Identity>("identity") {
     const tokenSchema = {
       token,
       identity: String(identity._id),
-      expires_in: new Date(Date.now() + (expiresIn * 1000)),
+      created_at: new Date(),
+      expired_at: new Date(Date.now() + (expiresIn * 1000)),
     }
     
-    this.refreshtoken.insertOne(tokenSchema)
+    await this.refreshtoken.insertOne(tokenSchema)
   
     return tokenSchema;
   }
 
   async verifyRefreshToken(accessToken: string, refreshToken:string){
-    const decodedRefreshToken = await this.verify(refreshToken).catch(() => {});
+    const decodedRefreshToken = await this.verify(refreshToken).catch(console.error);
     if(!decodedRefreshToken){
       return;
     }

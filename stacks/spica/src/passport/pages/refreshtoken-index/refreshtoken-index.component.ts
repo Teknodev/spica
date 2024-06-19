@@ -14,11 +14,12 @@ export class RefreshTokenIndexComponent implements OnInit {
   @ViewChild("toolbar", {static: true}) toolbar: TemplateRef<any>;
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
-  properties = ["_id", "token", "expires_in", "identity", "actions"];
+  properties = ["_id", "token", "created_at", "expired_at", "identity", "actions"];
   displayedProperties = JSON.parse(localStorage.getItem("Refreshtoken-displayedProperties")) || [
     "_id",
     "token",
-    "expires_in",
+    "created_at",
+    "expired_at",
     "identity",
     "actions"
   ];
@@ -90,7 +91,7 @@ export class RefreshTokenIndexComponent implements OnInit {
     if (display) {
       this.displayedProperties = JSON.parse(JSON.stringify(this.properties));
     } else {
-      this.displayedProperties = ["_id", "token", "expires_in", "identity", "actions"];
+      this.displayedProperties = ["_id", "token", "created_at", "expired_at", "identity", "actions"];
     }
 
     localStorage.setItem("Refreshtoken-displayedProperties", JSON.stringify(this.displayedProperties));
