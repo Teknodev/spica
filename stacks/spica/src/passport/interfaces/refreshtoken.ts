@@ -8,15 +8,6 @@ export interface RefreshToken {
   identity: string;
 }
 
-export function emptyRefreshToken(): RefreshToken {
-  return {
-    token: undefined,
-    created_at: new Date(),
-    expired_at: new Date(),
-    identity: undefined
-  };
-}
-
 export interface RefreshTokenSchema {
   properties: {
     [key: string]: Property;

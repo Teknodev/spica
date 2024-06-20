@@ -290,11 +290,11 @@ export class PassportController {
     const {refreshToken} = req.cookies;
     
     if (!refreshToken) {
-      throw new BadRequestException("Refresh token does not exist.");
+      throw new UnauthorizedException("Refresh token does not exist.");
     }
     const identity = await this.identityService.verifyRefreshToken(accessToken, refreshToken);
     if(!identity){
-      throw new BadRequestException("Invalid refresh token.");
+      throw new UnauthorizedException("Invalid refresh token.");
     }
 
     const tokenSchema = this.identityService.sign(identity)
