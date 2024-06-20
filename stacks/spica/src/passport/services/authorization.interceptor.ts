@@ -56,7 +56,7 @@ export class AuthorizationInterceptor implements HttpInterceptor {
           this._snackBar.openFromComponent(SnackbarComponent, {
             data: {
               status: r.status,
-              message: "You must log in again due to 15 minutes of inactivity.",
+              message: "You've been inactive for a while, must log in again.",
             } as SnackbarError,
             duration: 5000
           })
