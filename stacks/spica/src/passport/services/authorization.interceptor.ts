@@ -63,6 +63,8 @@ export class AuthorizationInterceptor implements HttpInterceptor {
   }
 
   handleRefreshTokenError(error) {
+    this.passport.logout();
+    this.router.navigate(["passport/identify"]);
     console.error(error)
     this._snackBar.openFromComponent(SnackbarComponent, {
       data: {
