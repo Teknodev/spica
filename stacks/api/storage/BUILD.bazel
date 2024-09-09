@@ -2,8 +2,6 @@ load("//tools/ts_project:index.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-load("//tools/dgeni:index.bzl", "docs")
-
 ts_project(
     name = "storage",
     package_name = "@spica-server/storage",
@@ -37,17 +35,3 @@ ts_project(
     ],
 )
 
-docs(
-    name = "docs",
-    srcs = [
-        "src/storage.controller.ts",
-    ],
-    doc_name = "storage",
-    tags = ["storage-docs"],
-    exports = [
-        "storage",
-    ],
-    deps = [
-        "//packages/database",
-    ],
-)

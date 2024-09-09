@@ -2,8 +2,6 @@ load("//tools/ts_project:index.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-load("//tools/dgeni:index.bzl", "docs")
-
 ts_project(
     name = "passport",
     package_name = "@spica-server/passport",
@@ -39,16 +37,3 @@ ts_project(
     ],
 )
 
-docs(
-    name = "docs",
-    srcs = [
-        "src/passport.controller.ts",
-    ],
-    doc_name = "passport",
-    exports = [
-        "passport",
-    ],
-    deps = [
-        "//packages/database",
-    ],
-)

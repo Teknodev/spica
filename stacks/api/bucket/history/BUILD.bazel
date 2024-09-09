@@ -3,7 +3,6 @@ load("//tools/ts_project:index.bzl", "ts_project")
 package(default_visibility = ["//visibility:public"])
 
 load("@npm//@bazel/jasmine:index.bzl", "jasmine_node_test")
-load("//tools/dgeni:index.bzl", "docs")
 
 ts_project(
     name = "history",
@@ -24,15 +23,6 @@ ts_project(
     ],
 )
 
-docs(
-    name = "docs",
-    srcs = ["history.controller.ts"],
-    tags = ["history-docs"],
-    exports = [
-        "HistoryController",
-    ],
-    deps = [":history"],
-)
 
 ts_project(
     name = "history_e2e_test_lib",

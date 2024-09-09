@@ -2,8 +2,6 @@ load("//tools/ts_project:index.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-load("//tools/dgeni:index.bzl", "docs")
-
 ts_project(
     name = "bucket",
     package_name = "@spica-server/bucket",
@@ -43,20 +41,5 @@ ts_project(
         "@npm//@types/node",
         "@npm//cron",
         "@npm//rxjs",
-    ],
-)
-
-docs(
-    name = "docs",
-    srcs = glob(["**/*.ts"]),
-    doc_name = "bucket",
-    tags = ["bucket-docs"],
-    exports = [
-        "bucket",
-        "data",
-    ],
-    deps = [
-        "//packages/database",
-        "//stacks/api/passport",
     ],
 )

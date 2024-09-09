@@ -83,6 +83,8 @@ nodejs_image(
         "@nodejs_linux_amd64//:npm_files",
     ],
     visibility = ["//visibility:private"],
+    include_node_repo_args = False,
+    node_repository_name = "nodejs_linux_amd64",
 )
 
 container_image(
@@ -104,6 +106,6 @@ container_push(
     image = ":image",
     registry = "index.docker.io",
     repository = "htuna07/aws-spica-api",
-    tag = "0.9.29",
+    tag = "pre1-version-upgrade",
     tags = ["release-with-spica"],
 )

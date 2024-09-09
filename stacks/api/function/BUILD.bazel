@@ -2,8 +2,6 @@ load("//tools/ts_project:index.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-load("//tools/dgeni:index.bzl", "docs")
-
 ts_project(
     name = "function",
     package_name = "@spica-server/function",
@@ -42,20 +40,5 @@ ts_project(
         "@npm//rimraf",
         "@npm//rxjs",
         "@npm//typescript",
-    ],
-)
-
-docs(
-    name = "docs",
-    srcs = [
-        "src/function.controller.ts",
-    ],
-    doc_name = "function",
-    tags = ["function-docs"],
-    exports = [
-        "Function",
-    ],
-    deps = [
-        "//packages/database",
     ],
 )
