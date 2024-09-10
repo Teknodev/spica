@@ -23,7 +23,7 @@ describe("Bucket Service", () => {
       bs = module.get(BucketService);
       bds = module.get(BucketDataService);
 
-      await bs.createCollection("buckets");
+      // await bs.createCollection("buckets");
     });
 
     afterEach(() => module.close());
