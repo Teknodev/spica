@@ -29,7 +29,7 @@ import {Scheduler} from "@spica-server/function/scheduler";
 import {ActionGuard, AuthGuard, ResourceFilter} from "@spica-server/passport/guard";
 import * as os from "os";
 import {of, OperatorFunction} from "rxjs";
-import {catchError, finalize, last, map, tap} from "rxjs/operators";
+import {catchError, finalize, last, map, tap} from "rxjs/operators/index.js";
 import {createFunctionActivity} from "./activity.resource";
 import {FunctionEngine} from "./engine";
 import {FunctionService, FUNCTION_OPTIONS, Options} from "@spica-server/function/services";
