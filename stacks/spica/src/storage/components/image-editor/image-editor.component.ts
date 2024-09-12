@@ -6,8 +6,6 @@ import {StorageService} from "../../services/storage.service";
 import {Observable, of, BehaviorSubject} from "rxjs";
 import {SavingState} from "@spica-client/material";
 import {tap, take} from "rxjs/operators";
-import {HttpClient} from "@angular/common/http";
-import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 
 @Component({
   selector: "storage-image-editor",
@@ -17,8 +15,6 @@ import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 export class ImageEditorComponent implements OnInit {
   @ViewChild("cropperComponent") public cropperComponent: CropperComponent;
   @ViewChild("canvas", {static: true}) canvas: ElementRef;
-
-  content: SafeUrl;
 
   public cropperOptions: Cropper.Options = {
     movable: true,
@@ -38,8 +34,6 @@ export class ImageEditorComponent implements OnInit {
   $save: BehaviorSubject<SavingState> = new BehaviorSubject(SavingState.Pristine);
 
   constructor(
-    private http: HttpClient,
-    private sanitizer: DomSanitizer,
     private storageService: StorageService,
     private dialogRef: MatDialogRef<ImageEditorComponent>,
     @Inject(MAT_DIALOG_DATA) private data: Storage
@@ -61,9 +55,7 @@ export class ImageEditorComponent implements OnInit {
       .getOne(this.data._id)
       .pipe(tap(() => this.$save.next(SavingState.Pristine)))
       .toPromise()
-      .then(storage => (this.storage = storage))
-      .then(storage => this.storageService.download(storage.url))
-      .then(content => (this.content = content));
+      .then(storage => (this.storage = storage));
   }
 
   cropperReady() {

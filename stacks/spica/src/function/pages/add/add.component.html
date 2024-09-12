@@ -63,7 +63,6 @@
       [language]="function.language"
       [dependencies]="dependencies | async"
       (handlers)="onHandlersEmitted($event)"
-      (debouncedChange)="onDebouncedChangeEmitted()"
     >
     </code-editor>
     <div class="resize-cursor" (mousedown)="onMouseDown()"></div>
@@ -137,7 +136,7 @@
                   >
                     <mat-option
                       *ngFor="let handler of handlers"
-                      class="mat-accent"
+                      class="mat-mdc-accent"
                       [value]="handler"
                       [disabled]="isHandlerInUse(handler)"
                     >
@@ -170,7 +169,7 @@
                       <mat-icon>{{ enqueuer.description.icon }}</mat-icon>
                       <mat-label>
                         <span>{{ enqueuer.description.title }}</span> —
-                        <small class="mat-small">{{ enqueuer.description.description }}</small>
+                        <small class="mat-mdc-small">{{ enqueuer.description.description }}</small>
                       </mat-label>
                     </mat-option>
                   </mat-select>

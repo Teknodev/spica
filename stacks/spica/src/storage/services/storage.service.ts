@@ -1,6 +1,5 @@
 import {HttpClient, HttpEvent, HttpHeaders, HttpParams, HttpRequest} from "@angular/common/http";
 import {Injectable} from "@angular/core";
-import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {IndexResult, fileToBuffer} from "@spica-client/core";
 import * as BSON from "bson";
 import {Buffer} from "buffer";
@@ -16,7 +15,7 @@ window["Buffer"] = Buffer;
 @Injectable({providedIn: "root"})
 export class StorageService {
   private lastUpdates: LastUpdateCache;
-  constructor(private http: HttpClient, private sanitizer: DomSanitizer) {
+  constructor(private http: HttpClient) {
     this.lastUpdates = new LastUpdateCache();
   }
 
@@ -80,40 +79,53 @@ export class StorageService {
   updateOne(storageObject: Storage, file: File): Observable<HttpEvent<Storage>> {
     storageObject = this.prepareToUpdate(storageObject);
 
-    const formData = new FormData();
-    formData.append("file", this.updateFileName(file, storageObject.name));
+    return from(fileToBuffer(file)).pipe(
+      flatMap(content => {
+        const schema = {
+          ...storageObject,
+          content: {data: new BSON.Binary(content), type: file.type}
+        };
 
-    const request = new HttpRequest("PUT", `api:/storage/${storageObject._id}`, formData, {
-      reportProgress: true
-    });
+        const id = schema._id;
+        delete schema._id;
 
-    return this.http.request<Storage>(request);
-  }
+        delete schema.url;
 
-  private prepareFile(file: File, prefix?: string) {
-    let name = prefix ? `${prefix}${file.name}` : file.name;
-    return this.updateFileName(file, name);
-  }
+        const data = BSON.serialize(schema, {
+          minInternalBufferSize: BSON.calculateObjectSize(schema)
+        } as any);
+        const request = new HttpRequest("PUT", `api:/storage/${id}`, data.buffer, {
+          reportProgress: true,
+          headers: new HttpHeaders({"Content-Type": "application/bson"})
+        });
 
-  private updateFileName(file: File, name: string) {
-    name = encodeURIComponent(name);
-    return new File([file], name, {type: file.type, lastModified: file.lastModified});
+        return this.http.request<Storage>(request);
+      })
+    );
   }
 
   insertMany(fileList: FileList, prefix?: string): Observable<HttpEvent<Storage>> {
-    const files = Array.from(fileList).map(file => {
-      return this.prepareFile(file, prefix);
-    });
-
-    const formData = new FormData();
-
-    files.forEach(file => formData.append("files", file));
-
-    const request = new HttpRequest("POST", "api:/storage", formData, {
-      reportProgress: true
-    });
-
-    return this.http.request<Storage>(request);
+    const files = Array.from(fileList);
+    return from(Promise.all(files.map(f => fileToBuffer(f)))).pipe(
+      flatMap(content => {
+        const contents = {
+          content: content.map((c, i) => ({
+            name: prefix ? `${prefix}${files[i].name}` : files[i].name,
+            content: {
+              data: new BSON.Binary(c),
+              type: files[i].type
+            }
+          }))
+        };
+        const size = BSON.calculateObjectSize(contents);
+        const buffer = BSON.serialize(contents, {minInternalBufferSize: size} as any);
+        const request = new HttpRequest("POST", "api:/storage", buffer.buffer, {
+          reportProgress: true,
+          headers: new HttpHeaders({"Content-Type": "application/bson"})
+        });
+        return this.http.request<Storage>(request);
+      })
+    );
   }
 
   private prepareToDisplay(object: Storage) {
@@ -167,20 +179,5 @@ export class StorageService {
 
   updateName(_id: string, name: string) {
     return this.http.patch(`api:/storage/${_id}`, {name});
-  }
-
-  download(url: string, prepareForDisplay?: true): Promise<SafeUrl>;
-  download(url: string, prepareForDisplay?: false): Promise<Blob>;
-  download(url: string, prepareForDisplay?: boolean): Promise<Blob | SafeUrl>;
-  download(url: string, prepareForDisplay = true) {
-    return this.http
-      .get(url, {responseType: "blob"})
-      .toPromise()
-      .then(blob => {
-        if (!prepareForDisplay) {
-          return blob;
-        }
-        return this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob));
-      });
   }
 }

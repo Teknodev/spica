@@ -40,7 +40,6 @@ import {StrategyDialogComponent} from "./components/strategy-dialog/strategy-dia
 import {CanInteractDirective} from "./directives/can-interact.directive";
 import {ApiKeyAddComponent} from "./pages/apikey-add/apikey-add.component";
 import {ApiKeyIndexComponent} from "./pages/apikey-index/apikey-index.component";
-import {RefreshTokenIndexComponent} from "./pages/refreshtoken-index/refreshtoken-index.component";
 import {IdentifyComponent} from "./pages/identify/identify.component";
 import {IdentityAddComponent} from "./pages/identity-add/identity-add.component";
 import {IdentityIndexComponent} from "./pages/identity-index/identity-index.component";
@@ -60,7 +59,6 @@ import {PolicyResourceAddComponent} from "./components/policy-resource-add/polic
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {ASSET_CONFIG_EXPORTER, ASSET_RESOURCE_LISTER} from "@spica-client/asset/interfaces";
 import {ApiKeyService} from "./services/apikey.service";
-import {PassportOptions, PASSPORT_OPTIONS} from "./interfaces/passport";
 
 @NgModule({
   declarations: [
@@ -78,7 +76,6 @@ import {PassportOptions, PASSPORT_OPTIONS} from "./interfaces/passport";
     StrategiesAddComponent,
     CanInteractDirective,
     ApiKeyIndexComponent,
-    RefreshTokenIndexComponent,
     ApiKeyAddComponent,
     StrategyDialogComponent,
     PolicyResourceAddComponent,
@@ -117,23 +114,14 @@ import {PassportOptions, PASSPORT_OPTIONS} from "./interfaces/passport";
     MatFormFieldModule,
     MatClipboardModule
   ],
-  exports: [CanInteractDirective],
-  entryComponents: [IdentityBadgeComponent, StrategyDialogComponent, HomeBadgeComponent]
+  exports: [CanInteractDirective]
 })
 export class PassportModule {
-  static forRoot(options: PassportOptions): ModuleWithProviders<PassportModule> {
+  static forRoot(): ModuleWithProviders<PassportModule> {
     return {
       ngModule: PassportModule,
       providers: [
-        {
-          provide: HTTP_INTERCEPTORS, 
-          useClass: AuthorizationInterceptor,
-          multi: true
-        },
-        {
-          provide: PASSPORT_OPTIONS,
-          useValue: options
-        },
+        {provide: HTTP_INTERCEPTORS, useClass: AuthorizationInterceptor, multi: true},
         {
           provide: LAYOUT_ACTIONS,
           useValue: {component: HomeBadgeComponent, position: "right"},

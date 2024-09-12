@@ -2,7 +2,7 @@ import {HttpClient} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 import jwt_decode from "jwt-decode";
 import * as matcher from "matcher";
-import {Observable, Subject} from "rxjs";
+import {Observable} from "rxjs";
 import {concatMap, map, shareReplay} from "rxjs/operators";
 import {Identity} from "../interfaces/identity";
 import {Statement} from "../interfaces/statement";
@@ -12,8 +12,6 @@ export type IdentifyParams = {identifier: string; password: string};
 
 @Injectable({providedIn: "root"})
 export class PassportService {
-  refreshTokenSubject = new Subject<string>();
-  
   private _statements: Observable<Statement[]>;
 
   get token(): string {
@@ -23,7 +21,7 @@ export class PassportService {
     localStorage.setItem("access_token", token);
   }
 
-  get decodedToken(): Identity & {exp: number, iat: number} {
+  get decodedToken(): Identity & {exp: number} {
     const decodedToken = this.token.replace(/\w*\s\b/g, "");
     return jwt_decode(decodedToken);
   }
@@ -44,21 +42,18 @@ export class PassportService {
 
   onTokenRecieved(response) {
     this.token = `${response.scheme} ${response.token}`;
-  }
-
-  resetStatements(){
     this._statements = undefined;
   }
 
   answerAuthFactor(factor, answer) {
     return this.http.post(`api:/${factor.answerUrl}`, {
       answer
-    },  {withCredentials: true});
+    });
   }
 
   identify(identityOrStrategy: IdentifyParams | string, openCallback?: (url: string) => void) {
     if (typeof identityOrStrategy != "string") {
-      return this.http.post<any>("api:/passport/identify", identityOrStrategy, {withCredentials: true});
+      return this.http.post<any>("api:/passport/identify", identityOrStrategy);
     }
 
     return this.http
@@ -71,10 +66,6 @@ export class PassportService {
           return this.http.get(`api:/passport/identify`, {params: {state: res.state}});
         })
       );
-  }
-
-  getAccessToken() {
-    return this.http.get<any>("api:/passport/access-token", {withCredentials: true});
   }
 
   getStrategies() {
