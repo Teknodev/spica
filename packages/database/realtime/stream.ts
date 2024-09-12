@@ -1,14 +1,14 @@
-const {Query} = require("mingo");
-import {ChunkKind, StreamChunk} from "@spica-server/interface/realtime";
-import {ChangeStream, Collection, ObjectId} from "mongodb";
-import {asyncScheduler, Observable, Subject, Subscriber, Subscription, TeardownLogic} from "rxjs";
-import {filter, bufferTime, switchMap, share} from "rxjs/operators";
-import {PassThrough} from "stream";
-import {DatabaseChange, FindOptions, OperationType} from "./interface";
-import {levenshtein} from "./levenshtein";
-import {late} from "./operators";
+import { Query } from 'mingo';
+import { ChunkKind, StreamChunk } from '@spica-server/interface/realtime';
+import { ChangeStream, Collection, ObjectId } from 'mongodb';
+import { asyncScheduler, Observable, Subject, Subscriber, TeardownLogic, Subscription } from 'rxjs';
+import { filter, bufferTime, switchMap, share } from 'rxjs/operators';
+import { PassThrough } from 'stream';
+import { DatabaseChange, FindOptions, OperationType } from './interface';
+import { levenshtein } from './levenshtein';
+import { late } from './operators';
 
-export class Emitter<T extends {_id: ObjectId}> {
+export class Emitter<T extends { _id: ObjectId }> {
   private sort = new Subject<DatabaseChange<T>>();
   private sortSubscription: Subscription;
 
@@ -26,6 +26,7 @@ export class Emitter<T extends {_id: ObjectId}> {
   private passThrough = new PassThrough({
     objectMode: true
   });
+
   constructor(
     private collection: Collection,
     private changeStream: ChangeStream,
@@ -38,7 +39,7 @@ export class Emitter<T extends {_id: ObjectId}> {
         this.listenSortChanges();
       }
 
-      this.passThrough.on("data", (change: DatabaseChange<T>) => {
+      this.passThrough.on('data', (change: DatabaseChange<T>) => {
         switch (change.operationType) {
           case OperationType.INSERT:
             if (
@@ -53,7 +54,7 @@ export class Emitter<T extends {_id: ObjectId}> {
               return this.sort.next(change);
             }
 
-            this.next({kind: ChunkKind.Insert, document: change.fullDocument});
+            this.next({ kind: ChunkKind.Insert, document: change.fullDocument });
 
             break;
 
@@ -61,7 +62,7 @@ export class Emitter<T extends {_id: ObjectId}> {
             const documentId = change.documentKey._id.toString();
 
             if (this.ids.has(documentId)) {
-              this.next({kind: ChunkKind.Delete, document: change.documentKey});
+              this.next({ kind: ChunkKind.Delete, document: change.documentKey });
 
               if (options.limit && this.ids.size < options.limit) {
                 this.fetchMoreItemToFillTheCursor();
@@ -134,7 +135,7 @@ export class Emitter<T extends {_id: ObjectId}> {
 
   getLateSubscriberOperator() {
     return late<StreamChunk<T>>((subscriber, connect) => {
-      const pipeline = [];
+      const pipeline: any[] = [];
 
       if (this.options.filter) {
         pipeline.push({
@@ -165,51 +166,49 @@ export class Emitter<T extends {_id: ObjectId}> {
         .toArray()
         .then(documents => {
           for (const document of documents) {
-            // we can not use this.next since it's designed for notifying all listeners
-            subscriber.next({kind: ChunkKind.Initial, document: document});
+            subscriber.next({ kind: ChunkKind.Initial, document: document });
             this.ids.add(document._id.toString());
           }
         })
         .catch(e => subscriber.error(e))
         .finally(() => {
-          // we can not use this.next since it's designed for notifying all listeners
-          subscriber.next({kind: ChunkKind.EndOfInitial});
+          subscriber.next({ kind: ChunkKind.EndOfInitial });
           connect();
         });
     });
   }
 
-  next(message: {kind: ChunkKind; document?: T}) {
+  next(message: { kind: ChunkKind; document?: T }) {
     this.observer.next(message);
-    const id = message.document._id.toString();
+    const id = message.document?._id.toString();
 
     switch (message.kind) {
       case ChunkKind.Initial:
       case ChunkKind.Insert:
-        this.ids.add(id);
+        if (id) this.ids.add(id);
         break;
       case ChunkKind.Update:
       case ChunkKind.Replace:
-        this.ids.add(id);
+        if (id) this.ids.add(id);
         break;
       case ChunkKind.Expunge:
       case ChunkKind.Delete:
-        this.ids.delete(id);
+        if (id) this.ids.delete(id);
         break;
     }
   }
 
-  error(e) {
+  error(e: Error) {
     this.observer.error(e);
   }
 
-  private getTearDownLogic() {
+  private getTearDownLogic(): TeardownLogic {
     return () => {
       if (this.sortSubscription) {
         this.sortSubscription.unsubscribe();
       }
 
-      if (!this.changeStream.isClosed()) {
+      if (!this.changeStream.closed) {
         this.changeStream.unpipe(this.passThrough);
       }
 
@@ -222,31 +221,20 @@ export class Emitter<T extends {_id: ObjectId}> {
     this.sortSubscription = this.sort
       .pipe(
         filter(change => this.doesTheChangeAffectTheSortedCursor(sortedKeys, change)),
-        // since we can't predict the cascading updates that followed by an order packet
-        // we have to buffer all incoming events and process them as soon as the queue lets us
-        // also, this could be taken as cursor option to allow the users to change this value as needed.
-        // IMPORTANT: if you see a weird behavior such as a order packet precedes an update or insert packet
-        // then this bufferTime is the culprit that leads to such behavior. in that case if you increase
-        // the buffer time, it is less likely that you'll see such weird behavior.
-        // There's no optimal value for this buffering logic since it depends on how frequently the cursor
-        // affected by cascading updates or inserts.
         bufferTime(1, asyncScheduler),
         filter(changes => changes.length > 0),
         switchMap(async changes => {
-          // This optimizes sorting by sending inserts in reverse order
-          // if the cursor sorted by _id property.
           if (
             sortedKeys.length == 1 &&
-            sortedKeys[0] == "_id" &&
+            sortedKeys[0] == '_id' &&
             changes.length > 1 &&
-            this.options.sort._id == -1
+            this.options.sort?._id == -1
           ) {
             changes = changes.reverse();
           }
           for (const change of changes) {
             if (change.operationType == OperationType.INSERT) {
-              // CHANGE STREAM DOES THE SAME THING, CHECK WHY
-              this.next({kind: ChunkKind.Insert, document: change.fullDocument});
+              this.next({ kind: ChunkKind.Insert, document: change.fullDocument });
             }
           }
 
@@ -254,7 +242,7 @@ export class Emitter<T extends {_id: ObjectId}> {
           const changeSequence = levenshtein(this.ids, syncedIds);
           if (changeSequence.distance) {
             this.ids = new Set(syncedIds);
-            this.observer.next({kind: ChunkKind.Order, sequence: changeSequence.sequence});
+            this.observer.next({ kind: ChunkKind.Order, sequence: changeSequence.sequence });
           }
         })
       )
@@ -262,7 +250,7 @@ export class Emitter<T extends {_id: ObjectId}> {
   }
 
   private fetchSortedIdsOfTheCursor(): Promise<string[]> {
-    const pipeline = [];
+    const pipeline: any[] = [];
 
     if (this.options.filter) {
       pipeline.push({
@@ -304,17 +292,18 @@ export class Emitter<T extends {_id: ObjectId}> {
     this.collection
       .find<T>(this.options.filter)
       .skip(this.options.skip ? this.options.skip + this.ids.size : this.ids.size)
-      .limit(this.options.limit - this.ids.size)
+      .limit(this.options.limit ? this.options.limit - this.ids.size : 0)
       .next()
-      .then(data => this.next({kind: ChunkKind.Initial, document: data}))
+      .then(data => this.next({ kind: ChunkKind.Initial, document: data }))
       .catch(e => this.error(e));
   }
 
-  private isChangeAlreadyPresentInCursor(change: DatabaseChange<T>) {
+  private isChangeAlreadyPresentInCursor(change: DatabaseChange<T>): boolean {
     return this.ids.has(change.documentKey._id.toString());
   }
 
   private doesMatch(document: T): boolean {
+    if (!this.options.filter) return true;
     const query = new Query(this.options.filter);
     return query.test(document);
   }
@@ -323,24 +312,19 @@ export class Emitter<T extends {_id: ObjectId}> {
     sortedKeys: string[],
     change: DatabaseChange<T>
   ): boolean {
-    // If the change occurred because of an update operation, we can check if the change affects our cursor by
-    // comparing the changed keys and our sorted keys
     if (change.operationType == OperationType.UPDATE) {
-      // TODO: Check this for subdocument updates (optimization)
-      // This check can be optimized for subdocument updates.
-      // Right now it only checks the root properties.
       const changedKeys: string[] = (change.updateDescription.removedFields || []).concat(
         Object.keys(change.updateDescription.updatedFields || {})
       );
-      return changedKeys.some(k => sortedKeys.indexOf(k) > -1);
+      return sortedKeys.some(key => changedKeys.includes(key));
     }
-
-    // if the event is not a update then it might affect the cursor
     return true;
   }
 }
 
-// HELPERS
-function getSortedKeys(sort: {[k: string]: -1 | 1}) {
-  return Object.keys(sort);
+function getSortedKeys<T>(sort: { [P in keyof T]?: 1 | -1 } | undefined): string[] {
+  if (!sort) return [];
+  return Object.keys(sort).sort((a, b) => {
+    return (sort[a] || 1) - (sort[b] || 1);
+  });
 }

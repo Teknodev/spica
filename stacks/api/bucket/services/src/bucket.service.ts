@@ -155,7 +155,7 @@ export class BucketService extends BaseCollection<Bucket>("buckets") {
       );
       stream.on("change", change => observer.next(change.fullDocument));
       return () => {
-        if (!stream.isClosed()) {
+        if (!stream.closed) {
           stream.close();
         }
       };
