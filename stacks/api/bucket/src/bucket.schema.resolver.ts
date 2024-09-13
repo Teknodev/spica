@@ -3,7 +3,7 @@ import {Bucket, BucketPreferences, BucketService, compile} from "@spica-server/b
 import {CodeKeywordDefinition, KeywordCxt, Validator, _} from "@spica-server/core/schema";
 import {ObjectId} from "@spica-server/database";
 import {combineLatest, Observable} from "rxjs";
-import {map} from "rxjs/operators/index.js";
+import {map} from "rxjs/operators";
 
 @Injectable()
 export class BucketSchemaResolver {

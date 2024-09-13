@@ -4,7 +4,7 @@ import formats from "ajv-formats";
 import {ValidationError} from "ajv/dist/compile/error_classes.js";
 import axios from "axios";
 import {from, isObservable} from "rxjs";
-import {skip, take, tap} from "rxjs/operators/index.js";
+import {skip, take, tap} from "rxjs/operators";
 import defaultVocabulary from "./default";
 import formatVocabulary from "./format";
 import {
@@ -73,7 +73,7 @@ export class Validator {
     for (const interceptor of this._resolvers) {
       const result = interceptor(uri);
       if (!!result) {
-        if (isObservable<Object>(result)) {
+        if (isObservable(result)) {
           result
             .pipe(
               skip(1),
