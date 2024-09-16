@@ -1,5 +1,5 @@
 import {MongoClient, MongoClientOptions} from "mongodb";
-// If db_util no longer exists, manually generate a db name
+
 function generateDbName(): string {
   return `test_${Math.random()
     .toString(36)

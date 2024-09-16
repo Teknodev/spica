@@ -221,9 +221,19 @@ export class Emitter<T extends { _id: ObjectId }> {
     this.sortSubscription = this.sort
       .pipe(
         filter(change => this.doesTheChangeAffectTheSortedCursor(sortedKeys, change)),
+        // since we can't predict the cascading updates that followed by an order packet
+        // we have to buffer all incoming events and process them as soon as the queue lets us
+        // also, this could be taken as cursor option to allow the users to change this value as needed.
+        // IMPORTANT: if you see a weird behavior such as a order packet precedes an update or insert packet
+        // then this bufferTime is the culprit that leads to such behavior. in that case if you increase
+        // the buffer time, it is less likely that you'll see such weird behavior.
+        // There's no optimal value for this buffering logic since it depends on how frequently the cursor
+        // affected by cascading updates or inserts.
         bufferTime(1, asyncScheduler),
         filter(changes => changes.length > 0),
         switchMap(async changes => {
+          // This optimizes sorting by sending inserts in reverse order
+          // if the cursor sorted by _id property.
           if (
             sortedKeys.length == 1 &&
             sortedKeys[0] == '_id' &&
@@ -312,19 +322,21 @@ export class Emitter<T extends { _id: ObjectId }> {
     sortedKeys: string[],
     change: DatabaseChange<T>
   ): boolean {
+    // If the change occurred because of an update operation, we can check if the change affects our cursor by
+    // comparing the changed keys and our sorted keys
     if (change.operationType == OperationType.UPDATE) {
+      // TODO: Check this for subdocument updates (optimization)
+      // This check can be optimized for subdocument updates.
+      // Right now it only checks the root properties.
       const changedKeys: string[] = (change.updateDescription.removedFields || []).concat(
         Object.keys(change.updateDescription.updatedFields || {})
       );
-      return sortedKeys.some(key => changedKeys.includes(key));
+      return changedKeys.some(k => sortedKeys.indexOf(k) > -1);
     }
     return true;
   }
 }
 
-function getSortedKeys<T>(sort: { [P in keyof T]?: 1 | -1 } | undefined): string[] {
-  if (!sort) return [];
-  return Object.keys(sort).sort((a, b) => {
-    return (sort[a] || 1) - (sort[b] || 1);
-  });
+function getSortedKeys(sort: {[k: string]: -1 | 1}) {  
+  return Object.keys(sort);
 }

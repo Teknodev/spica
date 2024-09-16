@@ -107,7 +107,7 @@ export class _MixinCollection<T> {
 
   // Delete
   findOneAndDelete(filter: Filter<T>, options?: FindOneAndDeleteOptions): Promise<T | null> {
-    return this._coll.findOneAndDelete(filter, options).then(r => r);
+    return this._coll.findOneAndDelete(filter, options);
   }
 
   deleteOne(filter: Filter<T>, options?: FindOptions): Promise<number> {
@@ -124,7 +124,7 @@ export class _MixinCollection<T> {
     doc: T,
     options?: FindOneAndReplaceOptions
   ): Promise<T | null> {
-    return this._coll.findOneAndReplace(filter, doc, options).then(r => r);
+    return this._coll.findOneAndReplace(filter, doc, options);
   }
 
   replaceOne(filter: Filter<T>, doc: T, options?: UpdateOptions): Promise<number> {
@@ -157,21 +157,25 @@ export class _MixinCollection<T> {
   }
 
   // Time to live index
-  async upsertTTLIndex(expireAfterSeconds: number) {
-    const indexes = await this._coll.listIndexes().toArray();
-    const ttlIndex = indexes.find(index => index.name === "created_at_1");
+  upsertTTLIndex(expireAfterSeconds: number) {
+    return this._coll
+      .listIndexes()
+      .toArray()
+      .then(indexes => {
+        const ttlIndex = indexes.find(index => index.name == "created_at_1");
 
-    if (!ttlIndex) {
-      await this._coll.createIndex({created_at: 1}, {expireAfterSeconds});
-    } else if (ttlIndex.expireAfterSeconds !== expireAfterSeconds) {
-      await this.db.command({
-        collMod: this._collection,
-        index: {
-          keyPattern: {created_at: 1},
-          expireAfterSeconds
+        if (!ttlIndex) {
+          return this._coll.createIndex({created_at: 1}, {expireAfterSeconds: expireAfterSeconds});
+        } else if (ttlIndex && ttlIndex.expireAfterSeconds != expireAfterSeconds) {
+          return this.db.command({
+            collMod: this._collection,
+            index: {
+              keyPattern: {created_at: 1},
+              expireAfterSeconds: expireAfterSeconds
+            }
+          });
         }
       });
-    }
   }
 
   collection(collection: string, options?: InitializeOptions) {
