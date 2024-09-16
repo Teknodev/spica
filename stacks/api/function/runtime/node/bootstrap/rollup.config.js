@@ -19,11 +19,11 @@ module.exports = {
         {
           find: "@spica-server/*",
           replacement: path.join(process.cwd(), "stacks", "api")
+        },
+        {
+          find: "@spica-devkit/database",
+          replacement: path.join(process.cwd(), "stacks", "api", "function", "packages", "database")
         }
-        // {
-        //   find: "@spica-devkit/*",
-        //   replacement: path.join(process.cwd(), "stacks", "api", "function", "packages")
-        // }
       ]
     }),
     resolve({

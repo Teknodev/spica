@@ -1,1 +1,1 @@
-// import "@spica-devkit/database";
+import "@spica-devkit/database";
