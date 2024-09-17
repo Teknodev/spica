@@ -1,9 +1,9 @@
 import {Injectable} from "@angular/core";
-import { Router } from "@angular/router";
+import {Router} from "@angular/router";
 import {PassportService} from "./passport.service";
 
 @Injectable({providedIn: "root"})
-export class IdentityGuard  {
+export class IdentityGuard {
   constructor(public passport: PassportService, public router: Router) {}
 
   canActivate() {
