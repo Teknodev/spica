@@ -21,7 +21,9 @@ describe("Validators", () => {
     });
 
     it("should return errors", () => {
-      expect(validator.validate(new UntypedFormControl(["ab", "ab"]))).toEqual({uniqueItems: [0, 1]});
+      expect(validator.validate(new UntypedFormControl(["ab", "ab"]))).toEqual({
+        uniqueItems: [0, 1]
+      });
     });
 
     it("should not return errors when disabled", () => {
@@ -93,7 +95,9 @@ describe("Validators", () => {
 
     it("should return errors", () => {
       validator.minItems = 2;
-      expect(validator.validate(new UntypedFormControl(["12"]))).toEqual({minItems: {min: 2, actual: 1}});
+      expect(validator.validate(new UntypedFormControl(["12"]))).toEqual({
+        minItems: {min: 2, actual: 1}
+      });
     });
   });
 });
