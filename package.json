@@ -25,7 +25,7 @@
     "build-api": "tsc --project tsconfig.json && tsc-alias",
     "build-entrypoint": "rollup -c './stacks/api/function/runtime/node/bootstrap/rollup.config.js' --bundleConfigAsCjs",
     "build": "yarn build-api && yarn build-entrypoint && yarn copy-nonts-files",
-    "start:dev": "FUNCTION_GRPC_ADDRESS='0.0.0.0:5688' node ./dist/stacks/api/main --database-name=spica --database-uri=mongodb://localhost:27017 --passport-secret=secret --public-url=http://localhost --port=4300",
+    "start:dev": "yarn build && FUNCTION_GRPC_ADDRESS='0.0.0.0:5688' node ./dist/stacks/api/main --database-name=spica --database-uri=mongodb://localhost:27017 --passport-secret=secret --public-url=http://localhost --port=4300",
     "start": "node ./dist/stacks/api/main",
     "bazel:format": "find . -type f \\( -name \"*.bzl\" -or -name WORKSPACE -or -name BUILD -or -name BUILD.bazel \\) ! -path \"*/node_modules/*\" | xargs buildifier -v --warnings=attr-cfg,attr-license,attr-non-empty,attr-output-default,attr-single-file,constant-glob,ctx-args,depset-iteration,depset-union,dict-concatenation,duplicated-name,filetype,git-repository,http-archive,integer-division,load,load-on-top,native-build,native-package,output-group,package-name,package-on-top,positional-args,redefined-variable,repository-name,same-origin-load,string-iteration,unused-variable",
     "code:format": "yarn prettier --write 'packages/**/*.{css,scss,ts,js,html}' 'stacks/**/*.{css,scss,ts,js,html}' '!stacks/api/function/packages/database/src/mongo.ts'",

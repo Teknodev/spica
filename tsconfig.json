@@ -17,7 +17,7 @@
       "@spica-server/*": ["./packages/*", "./stacks/api/*", "./migrate/*"],
       "@spica-devkit/*": ["./stacks/api/function/packages/"]
     },
-    // "esModuleInterop": true
+
   },
   "exclude": [
     "dist",

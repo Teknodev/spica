@@ -1,7 +1,7 @@
 import {Inject, Injectable, Optional} from "@nestjs/common";
 import {default as Ajv, ValidateFunction} from "ajv";
 import formats from "ajv-formats";
-import {ValidationError} from "ajv/dist/compile/error_classes.js";
+import {ValidationError} from "ajv/dist/compile/error_classes";
 import axios from "axios";
 import {from, isObservable} from "rxjs";
 import {skip, take, tap} from "rxjs/operators";
@@ -17,7 +17,7 @@ import {
   UriResolver
 } from "./interface";
 export {CodeKeywordDefinition, ErrorObject, KeywordCxt, _} from "ajv";
-export {ValidationError} from "ajv/dist/compile/error_classes.js";
+export {ValidationError} from "ajv/dist/compile/error_classes";
 
 @Injectable()
 export class Validator {

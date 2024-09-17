@@ -1,4 +1,4 @@
-import JsonMergePatch from "json-merge-patch"
+import JsonMergePatch = require("json-merge-patch");
 
 export function applyPatch(previousDocument: object, patchQuery: object) {
   const document = deepCopy(previousDocument);

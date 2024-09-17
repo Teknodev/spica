@@ -1,4 +1,4 @@
-import {_} from "ajv/dist/compile/codegen/index.js";
+import {_} from "ajv/dist/compile/codegen";
 import KeywordCxt from "ajv/dist/compile/context";
 import {CodeKeywordDefinition} from "ajv/dist/types";
 

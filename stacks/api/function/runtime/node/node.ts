@@ -36,9 +36,6 @@ class NodeWorker extends Worker {
       }
     );
 
-    this._process.stderr.pipe(process.stderr);
-    this._process.stdout.pipe(process.stdout);
-
     this._process.once("exit", () => (this._quit = true));
     Object.assign(this, this._process);
   }

@@ -1,6 +1,6 @@
 import * as peg from "pegjs";
 import * as fs from "fs";
-import path = require("path");
+import * as path from "path";
 
 const grammar = fs
   .readFileSync(path.join(__dirname, "grammar.pegjs"), {encoding: "utf8"})

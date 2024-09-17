@@ -8,8 +8,8 @@ import {
   UnauthorizedException
 } from "@nestjs/common";
 import {AuthModuleOptions, Type} from "@nestjs/passport";
-import {defaultOptions} from "@nestjs/passport/dist/options.js";
-import {memoize} from "@nestjs/passport/dist/utils/memoize.util.js";
+import {defaultOptions} from "@nestjs/passport/dist/options";
+import {memoize} from "@nestjs/passport/dist/utils/memoize.util";
 import * as passport from "passport";
 
 export const StrategyType = createParamDecorator((data: unknown, ctx: ExecutionContext) => {
