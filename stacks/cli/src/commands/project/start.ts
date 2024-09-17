@@ -13,6 +13,7 @@ import {projectName} from "../../validator";
 import * as path from "path";
 import * as fs from "fs";
 import {DockerMachine} from "../../project";
+// https://www.mongodb.com/docs/v6.0/release-notes/6.0-compatibility/#rs.reconfig-cluster-wide-write-concern-validation
 
 function streamToBuffer(stream: Stream): Promise<Buffer> {
   return new Promise(resolve => {
