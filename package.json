@@ -30,9 +30,6 @@
     "bazel": "bazelisk",
     "run-api": "bazel run //stacks/api:bin",
     "run-cli": "bazel run //stacks/cli:bin",
-    "copy-files": "cp ./stacks/api/bucket/expression/src/grammar.pegjs ./dist/stacks/api/bucket/expression/src/grammar.pegjs",
-    "build": "nest build; yarn copy-files",
-    "start": "yarn build; FUNCTION_GRPC_ADDRESS=0.0.0.0:5688 DATABASE_URI=mongodb://localhost:27017 REPLICA_SET=infra DATABASE_NAME=spica PUBLIC_HOST=http://localhost:4300 PORT=4300 PERSISTENT_PATH=/tmp SECRET=2b10shOzfYpDCy.RMgsVlwdQeONKGGzaBTfTQAjmXQNpMp4aKlLXrfZ/C DEFAULT_PASSWORD=spica BUCKET_HOOKS=true BUCKET_HISTORY=true ACTIVITY_STREAM=true EXPERIMENTAL_BUCKET_REALTIME=true FUNCTION_GRPC_ADDRESS=0.0.0.0:5688 FUNCTION_POOL_SIZE=1 node dist/stacks/api/main.js",
     "start-client": "cd stacks/spica && ng serve"
   },
   "dependencies": {
