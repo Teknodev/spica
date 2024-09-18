@@ -372,7 +372,6 @@
           margin-bottom: 15px;
         }
         .setting {
-          /* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
           mat-slide-toggle {
             margin-bottom: 20px;
           }
