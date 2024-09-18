@@ -123,11 +123,6 @@ describe("InputPlacer", () => {
           provide: InputResolver,
           useValue: resolverSpy
         }
-        // {
-        //   provide: ANALYZE_FOR_ENTRY_COMPONENTS,
-        //   multi: true,
-        //   useValue: [TestPlacer1, TestPlacer2]
-        // }
       ],
       declarations: [
         InputPlacerComponent,

@@ -51,13 +51,7 @@ describe("StoragePicker", () => {
         MatMenuModule
       ],
       declarations: [TestCmp, PickerDirective, PickerComponent, StorageViewComponent],
-      providers: [
-        // {
-        //   provide: ANALYZE_FOR_ENTRY_COMPONENTS,
-        //   multi: true,
-        //   useValue: PickerComponent
-        // }
-      ]
+      providers: []
     });
 
     TestBed.overrideProvider(StorageService, {

@@ -327,11 +327,6 @@ describe("Home Layout", () => {
             useValue: DummyAction,
             multi: true
           }
-          // {
-          //   provide: ANALYZE_FOR_ENTRY_COMPONENTS,
-          //   useValue: DummyAction,
-          //   multi: true
-          // }
         ]
       }).compileComponents();
       fixture = TestBed.createComponent(HomeLayoutComponent);

@@ -76,11 +76,6 @@ describe("Common#object", () => {
             provide: InputResolver,
             useValue: inputResolver
           }
-          // {
-          //   provide: ANALYZE_FOR_ENTRY_COMPONENTS,
-          //   multi: true,
-          //   useValue: StringPlacer
-          // }
         ]
       })
       .compileComponents();
