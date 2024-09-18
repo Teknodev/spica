@@ -129,11 +129,10 @@
   }
 
   .dot-menu {
-    /* TODO(mdc-migration): The following rule targets internal classes of menu that may no longer apply for the MDC version. */
     &.mat-mdc-menu-above {
       transform: translateY(-7px);
     }
-    /* TODO(mdc-migration): The following rule targets internal classes of menu that may no longer apply for the MDC version. */
+
     &.mat-mdc-menu-below {
       transform: translateY(7px);
     }
@@ -143,7 +142,7 @@
     height: 100%;
     max-width: unset !important;
     border-radius: 0px;
-    /* TODO(mdc-migration): The following rule targets internal classes of dialog that may no longer apply for the MDC version. */
+
     mat-dialog-container {
       border-radius: unset !important;
     }

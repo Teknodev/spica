@@ -32,10 +32,8 @@
           font-size: 11px;
           float: right;
         }
-        /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
-        /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
+
         mat-select {
-          /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
           mat-select-trigger {
             > * {
               vertical-align: middle;
@@ -52,7 +50,7 @@
           > * {
             display: block;
           }
-          /* TODO(mdc-migration): The following rule targets internal classes of slider that may no longer apply for the MDC version. */
+
           mat-slider {
             width: 100%;
           }

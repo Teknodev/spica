@@ -28,11 +28,10 @@
         .mat-mdc-icon {
           font-size: 17px;
         }
-        /* TODO(mdc-migration): The following rule targets internal classes of chips that may no longer apply for the MDC version. */
-        /* TODO(mdc-migration): The following rule targets internal classes of chips that may no longer apply for the MDC version. */
+
         mat-chip-listbox {
           margin-right: 10px;
-          /* TODO(mdc-migration): The following rule targets internal classes of chips that may no longer apply for the MDC version. */
+
           mat-chip-option {
             font-size: 11px;
             padding: 7px 10px;
@@ -117,7 +116,7 @@
           * {
             color: var(--primary-100);
           }
-          /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
+
           .mat-mdc-form-field-outline {
             background: transparent;
           }
