@@ -87,7 +87,6 @@
     "morgan": "^1.10.0",
     "multimatch": "^3.0.0",
     "nearest-color": "^0.4.4",
-    "ng2-charts": "^6.0.1",
     "node-fetch": "<3",
     "node-forge": "^0.10.0",
     "nodemailer": "^6.7.3",
