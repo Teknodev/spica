@@ -36,7 +36,7 @@ const API_FULL_URL = environment.api.startsWith("http")
       paramsInheritanceStrategy: "always"
     }),
     HttpClientModule,
-    BaseUrlInterceptorModule.forRoot({api: environment.api}),
+    BaseUrlInterceptorModule.forRoot({api: API_FULL_URL}),
     RouteModule.forRoot(),
     LayoutModule.forRoot(),
     StoreModule.forRoot([]),

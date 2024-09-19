@@ -49,7 +49,6 @@ import {VersionControlComponent} from "./pages/versioncontrol/versioncontrol.com
 import {MatExpansionModule} from "@angular/material/expansion";
 import {provideAssetFactory, provideAssetConfigExporter, listResources} from "./providers/asset";
 import {ASSET_CONFIG_EXPORTER, ASSET_RESOURCE_LISTER} from "@spica-client/asset/interfaces";
-// import {MuuriModule} from "muuri-angular";
 
 @NgModule({
   imports: [
@@ -86,7 +85,6 @@ import {ASSET_CONFIG_EXPORTER, ASSET_RESOURCE_LISTER} from "@spica-client/asset/
     MatProgressBarModule,
     MatDividerModule,
     MatExpansionModule
-    // MuuriModule
   ],
   declarations: [
     DashboardComponent,

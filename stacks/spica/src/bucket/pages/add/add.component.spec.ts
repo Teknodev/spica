@@ -321,7 +321,6 @@ describe("AddComponent", () => {
         const nowButton = document.body.querySelector<HTMLButtonElement>(
           ".mat-mdc-menu-panel > .mat-mdc-menu-content button"
         );
-        console.log("nowButton:", nowButton);
         const secondButton = document.querySelector<HTMLButtonElement>(
           ".mat-mdc-menu-panel > .mat-menu-content button:nth-of-type(2)"
         );
