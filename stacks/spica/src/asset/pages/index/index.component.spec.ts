@@ -2,7 +2,7 @@ import {ComponentFixture, fakeAsync, TestBed, tick} from "@angular/core/testing"
 import {AssetService} from "../../services/asset.service";
 import {Asset} from "../../interfaces";
 import {IndexComponent} from "./index.component";
-import {MatDialog, MatDialogModule} from "@angular/material/dialog";
+import {MatDialog, MatDialogConfig, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatIconModule} from "@angular/material/icon";
 import {MatCardModule} from "@angular/material/card";
@@ -12,7 +12,9 @@ import {MatButtonModule} from "@angular/material/button";
 import {CanInteractDirectiveTest} from "@spica-client/passport/directives/can-interact.directive";
 import {BrowserModule, By} from "@angular/platform-browser";
 import {CommonModule} from "@angular/common";
+import {BrowserTestingModule} from "@angular/platform-browser/testing";
 import {BehaviorSubject, of, Subject} from "rxjs";
+import {AssetInstallDialog} from "../../components/install/install.component";
 
 describe("IndexComponent", () => {
   let component: IndexComponent;

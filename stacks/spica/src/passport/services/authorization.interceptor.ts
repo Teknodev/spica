@@ -28,7 +28,7 @@ export class AuthorizationInterceptor implements HttpInterceptor {
   ) {
     this.passport.refreshTokenSubject
       .pipe(
-        debounceTime(20000000),
+        debounceTime(2000),
         filter(requestURL => requestURL !== `${this.options.url}/passport/access-token`),
         switchMap(() =>
           this.passport.getAccessToken().pipe(
