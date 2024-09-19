@@ -73,7 +73,7 @@ export class Validator {
     for (const interceptor of this._resolvers) {
       const result = interceptor(uri);
       if (!!result) {
-        if (isObservable<Object>(result)) {
+        if (isObservable(result)) {
           result
             .pipe(
               skip(1),
@@ -89,9 +89,10 @@ export class Validator {
         }
       }
     }
-    return axios.get(uri).then(r => r.data).catch(() =>
-      Promise.reject(new Error(`Could not resolve the schema ${uri}`))
-    );
+    return axios
+      .get(uri)
+      .then(r => r.data)
+      .catch(() => Promise.reject(new Error(`Could not resolve the schema ${uri}`)));
   }
 
   registerUriResolver(uriResolver: UriResolver) {
