@@ -39,7 +39,6 @@
     "monaco-editor-core": "^0.19.3",
     "monaco-languages": "^2.8.0",
     "muuri": "^0.9.5",
-    "muuri-angular": "^0.3.4",
     "ng2-charts": "^5.0.3",
     "ngx-highlightjs": "^10.0.0",
     "path-to-regexp": "^6.1.0",
