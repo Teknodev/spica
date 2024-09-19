@@ -134,9 +134,9 @@
   integrity sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==
 
 "@grpc/grpc-js@^1.11.2":
-  version "1.11.2"
-  resolved "https://registry.yarnpkg.com/@grpc/grpc-js/-/grpc-js-1.11.2.tgz#541a00303e533b5efe9d84ed61b84cdf9dd93ee7"
-  integrity sha512-DWp92gDD7/Qkj7r8kus6/HCINeo3yPZWZ3paKgDgsbKbSpoxKg1yvN8xe2Q8uE3zOsPe3bX8FQX2+XValq2yTw==
+  version "1.11.3"
+  resolved "https://registry.yarnpkg.com/@grpc/grpc-js/-/grpc-js-1.11.3.tgz#a33a472618d166fbb195012ae390dbfc277470ed"
+  integrity sha512-i9UraDzFHMR+Iz/MhFLljT+fCpgxZ3O6CxwGJ8YuNYHJItIHUzKJpW2LvoFZNnGPwqc9iWy9RAucxV0JoR9aUQ==
   dependencies:
     "@grpc/proto-loader" "^0.7.13"
     "@js-sdsl/ordered-map" "^4.4.2"
@@ -747,7 +747,12 @@
   resolved "https://registry.yarnpkg.com/@types/diff-match-patch/-/diff-match-patch-1.0.36.tgz#dcef10a69d357fe9d43ac4ff2eca6b85dbf466af"
   integrity sha512-xFdR6tkm0MWvBfO8xXCSsinYxHcqkQUlcHeSpMC2ukzOb6lwQAfDmW+Qt0AvlGd8HpsS28qKsB+oPeJn9I39jg==
 
-"@types/estree@*", "@types/estree@1.0.5", "@types/estree@^1.0.0":
+"@types/estree@*", "@types/estree@^1.0.0":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@types/estree/-/estree-1.0.6.tgz#628effeeae2064a1b4e79f78e81d87b7e5fc7b50"
+  integrity sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==
+
+"@types/estree@1.0.5":
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-1.0.5.tgz#a6ce3e556e00fd9895dd872dd172ad0d4bd687f4"
   integrity sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==
