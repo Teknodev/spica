@@ -98,7 +98,11 @@ const routes: Routes = [
         canActivateChild: [PolicyGuard],
         data: {service: "passport:refreshtoken"},
         children: [
-          {path: "", component: RefreshTokenIndexComponent, data: {action: "index"}},
+          {
+            path: "",
+            component: RefreshTokenIndexComponent,
+            data: {action: "index"}
+          }
         ]
       }
     ]
